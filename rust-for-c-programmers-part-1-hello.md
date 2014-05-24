@@ -50,4 +50,4 @@ You don't need the `return` keyword in Rust, if the last expression in a functio
 
 
 
-* This is a programmer specified conversion which uses the `Show` trait, which works a bit like `toString` in Java. You can also use `{:?}` which gives a compiler generated representation which is sometimes useful for debugging. As with printf, there are many other options.
+*This is a programmer specified conversion which uses the `Show` trait, which works a bit like `toString` in Java. You can also use `{:?}` which gives a compiler generated representation which is sometimes useful for debugging. As with printf, there are many other options.
