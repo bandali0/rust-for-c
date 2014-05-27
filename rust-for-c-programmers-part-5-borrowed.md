@@ -118,7 +118,7 @@ Unlike C++, Rust won't automatically reference a value for you. So if a function
 **`mut` vs `const`**  
 At this stage it is probably worth comparing `mut` in Rust to `const` in C++. Superficially they are opposites. Values are immutable by default in Rust and can be made mutable by using `mut`. Values are mutable by default in C++, but can be made constant by using `const`. The subtler and more important difference is that C++ const-ness applies only to the current use of a value, whereas Rust's immutability applies to all uses of a value. So in C++ if I have a `const` variable, someone else could have a non-const reference to it and it could change without me knowing. In Rust if you have an immutable variable, you are guaranteed it won't change.
 
-As we mentioned above, all mutable variables are unique. So if you have a mutable value, you know it is not going to change unless you change it. Furthermore, you can change it freely since you know that no one else is relying on it not changing.
+As we mentioned above, all mutable variables are unique. So if you have a mutable value, you know it is not going to change unless you change it. Furthermore, you can change it freely since you know that no one else is relying on it not changing.  
 **Borrowing and lifetimes**  
 One of the primary safety goals of Rust is to avoid dangling pointers (where a pointer outlives the memory it points to). In Rust, it is impossible to have a dangling borrowed reference. It is only legal to create a borrowed reference to memory which will be alive longer than the reference (well, at least as long as the reference). In other words, the lifetime of the reference must be shorter than the lifetime of the referenced value.
 
