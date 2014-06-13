@@ -1,6 +1,7 @@
-Rust for C++ programmers
-========================
+# Rust for C++ Programmers
 
-This repo contains "Rust for C++ programmers" posts by Nick Cameron, in Markdown format. I found it a bit hard to read the posts on [his blog](http://featherweightmusings.blogspot.com/), hence I'm copy pasting them here to read them easier. Of course, all the credit goes to [Nick Cameron](http://www.ncameron.org/).
+This gitbook is a collection of "Rust for C++ programmers" posts by Nick Cameron.
 
-After writing the [first part](/rust-for-c-programmers-part-1-hello.md), Nick wrote an intermission, [why Rust](http://featherweightmusings.blogspot.ca/2014/04/rust-for-c-programmers-intermission-why.html).
+I found it a bit hard to read the posts on [his blog](http://featherweightmusings.blogspot.com/), hence I started copy-pasting them into a [git repo](https://github.com/aminb/rust-for-c) to make it easier to read. Of course, all the credit for content goes to [Nick Cameron](http://www.ncameron.org/).
+
+After a while, I decided to turn them into a gitbook, so here it is!

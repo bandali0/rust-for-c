@@ -1,8 +1,8 @@
-###[Rust for C++ programmers - part 2: control flow](http://featherweightmusings.blogspot.ca/2014/04/rust-for-c-programmers-part-2-control.html)
+# Control Flow
 
-
-**If**  
+## If
 The `if` statement is pretty much the same in Rust as C++. One difference is that the braces are mandatory, but brackets around the expression being tested are not. Another is that `if` is an expression, so you can use it the same way as the ternary `?` operator in C++ (remember from last time that if the last expression in a block is not terminated by a semi-colon, then it becomes the value of the block). There is no ternary `?` in Rust. So, the following two functions do the same thing:
+
 ```rust
 fn foo(x: int) -> &'static str {
     let mut result: &'static str;
@@ -22,11 +22,12 @@ fn bar(x: int) -> &'static str {
     }
 }
 ```
+
 The first is a fairly literal translation of what you might write in C++. The second is in better Rust style.
 
 You can also write `let x = if ...`, etc.
 
-**Loops**  
+## Loops
 Rust has while loops, again just like C++:
 ```rust
 fn main() {
@@ -41,13 +42,13 @@ There is no do...while loop in Rust, but we do have the `loop` statement which j
 ```rust
 fn main() {
     loop {
-        println!("Just looping");    
+        println!("Just looping");
     }
 }
 ```
 Rust has `break` and `continue` just like C++.
 
-**For loops**  
+## For loops
 Rust also has `for` loops, but these are a bit different. Lets say you have a vector of ints and you want to print them all (we'll cover vectors/arrays, iterators, and generics in more detail in the future. For now, know that a `Vec<T>` is a sequence of `T`s and `iter()` returns an iterator from anything you might reasonably want to iterate over). A simple `for` loop would look like:
 ```rust
 fn print_all(all: Vec<int>) {
@@ -66,7 +67,7 @@ fn print_all(all: Vec<int>) {
 ```
 Hopefully, it is obvious what the `range` and `len` functions do.
 
-**Switch/Match**  
+## Switch/Match
 Rust has a match expression which is similar to a C++ switch statement, but much more powerful. This simple version should look pretty familiar:
 ```rust
 fn print_some(x: int) {
@@ -128,5 +129,6 @@ fn print_some_more(x: int) {
 Note the semi-colon after the closing brace, that is because the `let` statement is a statement and must take the form `let msg = ...;`. We fill the rhs with a match expression (which doesn't usually need a semi-colon), but the `let` statement does. This catches me out all the time.
 
 Motivation: Rust match statements avoid the common bugs with C++ switch statements - you can't forget a `break` and unintentionally fall through; if you add a case to an enum (more later on) the compiler will make sure it is covered by your `match` statement.
-Method call
+
+## Method call
 Finally, just a quick note that methods exist in Rust, similarly to C++. They are always called via the `.` operator (no `->`, more on this in another post). We saw a few examples above (`len`, `iter`). We'll go into more detail in the future about how they are defined and called. Most assumptions you might make from C++ or Java are probably correct.

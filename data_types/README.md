@@ -1,16 +1,15 @@
-###[Rust for C++ programmers - part 7: data types](http://featherweightmusings.blogspot.ca/2014/05/rust-for-c-programmers-part-7-data-types.html)
-
+# Data Types
 
 In this post I'll discuss Rust's data types. These are roughly equivalent to classes, structs, and enums in C++. One difference with Rust is that data and behaviour are much more strictly separated in Rust than C++ (or Java, or other OO languages). Behaviour is defined by functions and those can be defined in traits and `impl`s (implementations), but traits cannot contain data, they are similar to Java's interfaces in that respect. I'll cover traits and impls in a later post, this one is all about data.
 
-**Structs**
+## Structs
 
 A rust struct is similar to a C struct or a C++ struct without methods. Simply a list of named fields. The syntax is best seen with an example:
 ```rust
-    struct S {
-        field1: int,
-        field2: SomeOtherStruct
-    }
+struct S {
+    field1: int,
+    field2: SomeOtherStruct
+}
 ```
 
 Here we define a struct called `S` with two fields. The fields are comma separated; if you like, you can comma-terminate the last field too.
@@ -19,29 +18,29 @@ Structs introduce a type. In the example, we could use `S` as a type. `SomeOther
 
 Fields in structs are accessed using the `.` operator and their name. An example of struct use:
 ```rust
-    fn foo(s1: S, s2: &S) {
-        let f = s1.field1;
-        if f == s2.field1 {
-            println!("field1 matches!");
-        }
+fn foo(s1: S, s2: &S) {
+    let f = s1.field1;
+    if f == s2.field1 {
+        println!("field1 matches!");
     }
+}
 ```
 
 Here `s1` is struct object passed by value and `s2` is a struct object passed by reference. As with method call, we use the same `.` to access fields in both, no need for `->`.
 
 Structs are initialised using struct literals. These are the name of the struct and values for each field. For example,
 ```rust
-    fn foo(sos: SomeOtherStruct) {
-        let x = S { field1: 45, field2: sos };  // initialise x with a struct literal
-        println!("x.field1 = {}", x.field1);
-    }
+fn foo(sos: SomeOtherStruct) {
+    let x = S { field1: 45, field2: sos };  // initialise x with a struct literal
+    println!("x.field1 = {}", x.field1);
+}
 ```
 
 Structs cannot be recursive, that is you can't have cycles of struct names involving definitions and field types. This is because of the value semantics of structs. So for example, `struct R { r: Option<R> }` is illegal and will cause a compiler error (see below for more about Option). If you need such a structure then you should use some kind of pointer; cycles with pointers are allowed:
 ```rust
-    struct R {
-        r: Option<Box<R>>
-    }
+struct R {
+    r: Option<Box<R>>
+}
 ```
 
 (Note, `Box` is the new syntax for a unique/owning pointer, this has changed from `~R` which was introduced a few posts back).
@@ -50,162 +49,162 @@ If we didn't have the `Option` in the above struct, there would be no way to ins
 
 Structs with no fields do not use braces in either their definition or literal use. Definitions do need a terminating semi-colon though, presumably just to facilitate parsing.
 ```rust
-    struct Empty;
+struct Empty;
 
-    fn foo() {
-        let e = Empty;
-    }
+fn foo() {
+    let e = Empty;
+}
 ```
 
-**Tuples**
+## Tuples
 
 Tuples are anonymous, heterogeneous sequences of data. As a type, they are declared as a sequence of types in parentheses. Since there is no name, they are identified by structure. For example, the type `(int, int)` is a pair of integers and `(i32, f32, S)` is a triple. Enum values are initialised in the same way as enum types are declared, but with values instead of types for the components, e.g., `(4, 5)`. An example:
 ```rust
-    // foo takes a struct and returns a tuple
-    fn foo(x: SomeOtherStruct) -> (i32, f32, S) {
-        (23, 45.82, S { field1: 54, field2: x })
-    }
+// foo takes a struct and returns a tuple
+fn foo(x: SomeOtherStruct) -> (i32, f32, S) {
+    (23, 45.82, S { field1: 54, field2: x })
+}
 ```
     Tuples can be used by destructuring using a `let` expression, e.g.,
 ```rust
-    fn bar(x: (int, int)) {
-        let (a, b) = x;
-        println!("x was ({}, {})", a, b);
-    }
+fn bar(x: (int, int)) {
+    let (a, b) = x;
+    println!("x was ({}, {})", a, b);
+}
 ```
 
 We'll talk more about destructuring next time.
 
-**Tuple structs**
+## Tuple structs
 
 Tuple structs are named tuples, or alternatively, structs with unnamed fields. They are declared using the `struct` keyword, a list of types in parentheses, and a semicolon. Such a declaration introduces their name as a type. Their fields must be accessed by destructuring (like a tuple), rather than by name. Tuple structs are not very common.
 ```rust
-    struct IntPoint (int, int);
+struct IntPoint (int, int);
 
-    fn foo(x: IntPoint) {
-        let IntPoint(a, b) = x;  // Note that we need the name of the tuple
-                                 // struct to destructure.
-        println!("x was ({}, {})", a, b);
-    }
+fn foo(x: IntPoint) {
+    let IntPoint(a, b) = x;  // Note that we need the name of the tuple
+                             // struct to destructure.
+    println!("x was ({}, {})", a, b);
+}
 ```
 
-**Enums**
+## Enums
 
 Enums are types like C++ enums or unions, in that they are types which can take multiple values. The simplest kind of enum is just like a C++ enum:
 ```rust
-    enum E1 {
-        Var1,
-        Var2,
-        Var3
-    }
+enum E1 {
+    Var1,
+    Var2,
+    Var3
+}
 
-    fn foo() {
-        let x: E1 = Var2;
-        match x {
-            Var2 => println!("var2"),
-            _ => {}
-        }
+fn foo() {
+    let x: E1 = Var2;
+    match x {
+        Var2 => println!("var2"),
+        _ => {}
     }
+}
 ```
 
 However, Rust enums are much more powerful than that. Each variant can contain data. Like tuples, these are defined by a list of types. In this case they are more like unions than enums in C++. Rust enums are tagged unions rather untagged (as in C++), that means you can't mistake one variant of an enum for another at runtime. An example:
 ```rust
-    enum Expr {
-        Add(int, int),
-        Or(bool, bool),
-        Lit(int)
-    }
+enum Expr {
+    Add(int, int),
+    Or(bool, bool),
+    Lit(int)
+}
 
-    fn foo() {
-        let x = Or(true, false);   // x has type Expr
-    }
+fn foo() {
+    let x = Or(true, false);   // x has type Expr
+}
 ```
 
 Many simple cases of object-oriented polymorphism are better handled in Rust using enums.
 
 To use enums we usually use a match expression. Remember that these are similar to C++ switch statements. I'll go into more depth on these and other ways to destructure data next time. Here's an example:
 ```rust
-    fn bar(e: Expr) {
-        match e {
-            Add(x, y) => println!("An `Add` variant: {} + {}", x, y),
-            Or(..) => println!("An `Or` variant"),
-            _ => println!("Something else (in this case, a `Lit`)"),
-        }
+fn bar(e: Expr) {
+    match e {
+        Add(x, y) => println!("An `Add` variant: {} + {}", x, y),
+        Or(..) => println!("An `Or` variant"),
+        _ => println!("Something else (in this case, a `Lit`)"),
     }
+}
 ```
 
 Each arm of the match expression matches a variant of `Expr`. All variants must be covered. The last case (`_`) covers all remaining variants, although in the example there is only `Lit`. Any data in a variant can be bound to a variable. In the `Add` arm we are binding the two ints in an `Add` to `x` and `y`. If we don't care about the data, we can use `..` to match any data, as we do for `Or`.
 
-**Option**
+## Option
 
 One particularly common enum in Rust is `Option`. This has two variants - `Some` and `None`. `None` has no data and `Some` has a single field with type `T` (`Option` is a generic enum, which we will cover later, but hopefully the general idea is clear from C++). Options are used to indicate a value might be there or might not. Any place you use a null pointer in C++ to indicate a value which is in some way undefined, uninitialised, or false, you should probably use an Option in Rust. Using Option is safer because you must always check it before use; there is no way to do the equivalent of dereferencing a null pointer. They are also more general, you can use them with values as well as pointers. An example:
 ```rust
-    use std::rc::Rc;
+use std::rc::Rc;
 
-    struct Node {
-        parent: Option<Rc<Node>>,
-        value: int
-    }
+struct Node {
+    parent: Option<Rc<Node>>,
+    value: int
+}
 
-    fn is_root(node: Node) -> bool {
-        match node.parent {
-            Some(_) => false,
-            None => true
-        }
+fn is_root(node: Node) -> bool {
+    match node.parent {
+        Some(_) => false,
+        None => true
     }
+}
 ```
 Here, the parent field could be either a `None` or a `Some` containing an `Rc<Node>`. In the example, we never actually use that payload, but in real life you usually would.
 
 
 There are also convenience methods on Option, so you could write the body of `is_root` as `node.is_none()` or `!node.is_some()`.
 
-**Inherited mutabilty and Cell/RefCell**
+## Inherited mutabilty and Cell/RefCell
 
 Local variables in Rust are immutable by default and can be marked mutable using `mut`. We don't mark fields in structs or enums as mutable, their mutability is inherited. This means that a field in a struct object is mutable or immutable depending on whether the object itself is mutable or immutable. Example:
 ```rust
-    struct S1 {
-        field1: int,
-        field2: S2
-    }
-    struct S2 {
-        field: int
-    }
+struct S1 {
+    field1: int,
+    field2: S2
+}
+struct S2 {
+    field: int
+}
 
-    fn main() {
-        let s = S1 { field1: 45, field2: S2 { field: 23 } };
-        // s is deeply immutable, the following mutations are forbidden
-        // s.field1 = 46;
-        // s.field2.field = 24;
+fn main() {
+    let s = S1 { field1: 45, field2: S2 { field: 23 } };
+    // s is deeply immutable, the following mutations are forbidden
+    // s.field1 = 46;
+    // s.field2.field = 24;
 
-        let mut s = S1 { field1: 45, field2: S2 { field: 23 } };
-        // s is mutable, these are OK
-        s.field1 = 46;
-        s.field2.field = 24;
-    }
+    let mut s = S1 { field1: 45, field2: S2 { field: 23 } };
+    // s is mutable, these are OK
+    s.field1 = 46;
+    s.field2.field = 24;
+}
 ```
 
 Inherited mutability in Rust stops at references. This is similar to C++ where you can modify a non-const object via a pointer from a const object. If you want a reference field to be mutable, you have to use `&mut` on the field type:
 ```rust
-    struct S1 {
-        f: int
-    }
-    struct S2<'a> {
-        f: &'a mut S1   // mutable reference field
-    }
-    struct S3<'a> {
-        f: &'a S1       // immutable reference field
-    }
+struct S1 {
+    f: int
+}
+struct S2<'a> {
+    f: &'a mut S1   // mutable reference field
+}
+struct S3<'a> {
+    f: &'a S1       // immutable reference field
+}
 
-    fn main() {
-        let mut s1 = S1{f:56};
-        let s2 = S2 { f: &mut s1};
-        s2.f.f = 45;   // legal even though s2 is immutable
-        // s2.f = &mut s1; // illegal - s2 is not mutable
-        let s1 = S1{f:56};
-        let mut s3 = S3 { f: &s1};
-        s3.f = &s1;     // legal - s3 is mutable
-        // s3.f.f = 45; // illegal - s3.f is immutable
-    }
+fn main() {
+    let mut s1 = S1{f:56};
+    let s2 = S2 { f: &mut s1};
+    s2.f.f = 45;   // legal even though s2 is immutable
+    // s2.f = &mut s1; // illegal - s2 is not mutable
+    let s1 = S1{f:56};
+    let mut s3 = S3 { f: &s1};
+    s3.f = &s1;     // legal - s3 is mutable
+    // s3.f.f = 45; // illegal - s3.f is immutable
+}
 ```
 
 (The `'a` parameter on `S2` and `S3` is a lifetime parameter, we'll cover those soon).
@@ -220,24 +219,24 @@ Use RefCell for types which have move semantics, that means nearly everything in
 
 Here's an example using a ref-counted pointer to a RefCell (a common use-case):
 ```rust
-    use std::rc::Rc;
-    use std::cell::RefCell;
+use std::rc::Rc;
+use std::cell::RefCell;
 
-    Struct S {
-        field: int
+Struct S {
+    field: int
+}
+
+fn foo(x: Rc<RefCell<S>>) {
+    {
+        let s = x.borrow();
+        println!("the field, twice {} {}", s.f, x.borrow().field);
+        // let s = x.borrow_mut(); // Error - we've already borrowed the contents of x
     }
 
-    fn foo(x: Rc<RefCell<S>>) {
-        {
-            let s = x.borrow();
-            println!("the field, twice {} {}", s.f, x.borrow().field);
-            // let s = x.borrow_mut(); // Error - we've already borrowed the contents of x
-        }
-
-        let s = x.borrow_mut(); // O, the earlier borrows are out of scope
-        s.f = 45;
-        // println!("The field {}", x.borrow().field); // Error - can't mut and immut borrow
-        println!("The field {}", s.f);
-    }
+    let s = x.borrow_mut(); // O, the earlier borrows are out of scope
+    s.f = 45;
+    // println!("The field {}", x.borrow().field); // Error - can't mut and immut borrow
+    println!("The field {}", s.f);
+}
 ```
 If you're using Cell/RefCell, you should try to put them on the smallest object you can. That is, prefer to put them on a few fields of a struct, rather than the whole struct. Think of them like single threaded locks, finer grained locking is better since you are more likely to avoid colliding on a lock.

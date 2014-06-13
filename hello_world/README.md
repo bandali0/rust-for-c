@@ -1,5 +1,4 @@
-###[Rust for C++ programmers - part 1: Hello world](http://featherweightmusings.blogspot.ca/2014/04/rust-for-c-programmers-part-1-hello.html)
-
+# Hello world
 
 This is the first in a series of blog posts (none written yet) which aim to help experienced C++ programmers learn Rust. Expect updates to be sporadic at best. In this first blog post we'll just get setup and do a few super basic things. Much better resources are at the [tutorial](http://doc.rust-lang.org/doc/master/tutorial.html) and [reference manual](http://doc.rust-lang.org/doc/master/rust.html).
 
