@@ -7,4 +7,5 @@
 * [Borrowed References](borrowed_references/README.md)
 * [Rc, Gc and * Pointers](rc,_gc_and__pointers/README.md)
 * [Data Types](data_types/README.md)
+* [Destructuring](destructuring/README.md)
 
