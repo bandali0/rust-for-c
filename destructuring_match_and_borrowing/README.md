@@ -1,6 +1,6 @@
 # Destructuring Part 2 - Match and Borrowing
 
-(Continuing from part 8, Destructuring).
+(Continuing from Part 8, Destructuring).
 
 (Note this was significantly edited as I was wildly wrong the first time around. Thanks to /u/dpx-infinity for pointing out my mistakes.)
 
