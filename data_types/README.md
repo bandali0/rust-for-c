@@ -209,7 +209,7 @@ fn main() {
 
 (The `'a` parameter on `S2` and `S3` is a lifetime parameter, we'll cover those soon).
 
-Sometimes whilst an object is logically mutable, it has parts which need to be internally mutable. Think of various kinds of caching or a reference count (which would not give true logical immutability since the effect of changing the ref count can be observed via destructors). In C++, you would use the `mutable` keyword to allow such mutation even when the object is const. In Rust we have the Cell and RefCell structs. These allow parts of immutable objects to be mutated. Whilst that is useful, it means you need to be aware that when you see an immutable object in Rust, it is possible that some parts may actually be mutable.
+Sometimes whilst an object is logically immutable, it has parts which need to be internally mutable. Think of various kinds of caching or a reference count (which would not give true logical immutability since the effect of changing the ref count can be observed via destructors). In C++, you would use the `mutable` keyword to allow such mutation even when the object is const. In Rust we have the Cell and RefCell structs. These allow parts of immutable objects to be mutated. Whilst that is useful, it means you need to be aware that when you see an immutable object in Rust, it is possible that some parts may actually be mutable.
 
 RefCell and Cell let you get around Rust's strict rules on mutation and aliasability. They are safe to use because they ensure that Rust's invariants are respected dynamically, even though the compiler cannot ensure that those invariants hold statically. Cell and RefCell are both single threaded objects.
 
