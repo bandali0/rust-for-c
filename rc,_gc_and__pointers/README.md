@@ -13,7 +13,7 @@ Reference counted pointers come as part of the rust standard library. They are i
 
 As with the other pointer types, the `.` operator does all the dereferencing you need it to. You can use `*` to manually dereference.
 
-To pass a ref-counted pointer you need to use the `clone` method. This kinda sucks, and hopefully we'll fix that, but that is not for sure (sadly). You can take a (borrowed) reference to the pointed at value, so hopefully you don't need to clone too often. Rust's type system ensures that the ref-counted variable will not be deleted before any references expire. Taking a reference has the added advantage that it doesn't need to increment or decrement the ref count, and so will give better performance (although, that difference is probably marginal since Rc objects are limited to a single thread and so the ref count operations don't have to be atomic). As in C++, you can also take a reference to the Gc pointer.
+To pass a ref-counted pointer you need to use the `clone` method. This kinda sucks, and hopefully we'll fix that, but that is not for sure (sadly). You can take a (borrowed) reference to the pointed at value, so hopefully you don't need to clone too often. Rust's type system ensures that the ref-counted variable will not be deleted before any references expire. Taking a reference has the added advantage that it doesn't need to increment or decrement the ref count, and so will give better performance (although, that difference is probably marginal since Rc objects are limited to a single thread and so the ref count operations don't have to be atomic). As in C++, you can also take a reference to the Rc pointer.
 
 An Rc example:
 ```rust
